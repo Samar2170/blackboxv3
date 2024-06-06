@@ -1,9 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -21,10 +21,11 @@ func GetIP(r *http.Request) string {
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		if strings.HasPrefix(GetIP(r), "192.168.") {
-			return true
-		}
-		return false
+		// if strings.HasPrefix(GetIP(r), "192.168.") {
+		// 	return true
+		// }
+		// return false
+		return true
 	},
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -53,18 +54,16 @@ func ServeWS(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+	fmt.Println("Connected to", GetIP(r))
 	defer conn.Close()
 
 	for {
-		_, msg, err := conn.ReadMessage()
+		mt, msg, err := conn.ReadMessage()
 		if err != nil {
-			log.Println(err)
+			errStr := "Connection Error " + err.Error() + "\n"
+			conn.WriteMessage(websocket.CloseMessage, []byte(errStr))
 			return
 		}
-		log.Printf("Received: %s\n", msg)
-		if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
-			log.Println(err)
-			return
-		}
+		log.Println("Received:", MsgTypeMap[mt], string(msg))
 	}
 }

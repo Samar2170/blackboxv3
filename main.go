@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
@@ -28,20 +29,25 @@ func main() {
 	hostname := os.Getenv("HOSTNAME")
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
 	})
 	http.HandleFunc("/connect", func(w http.ResponseWriter, r *http.Request) {
 		qrCode := getQRCode(hostname)
 		w.Write(qrCode)
 	})
-	http.HandleFunc("/", server.ServeWS)
+	http.HandleFunc("/socket", server.ServeWS)
 	log.Println("Server started on " + hostname + ":8080")
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		log.Fatal(http.ListenAndServe(":8080", nil))
+		wg.Done()
+	}()
+	wg.Wait()
 }
 
 func testClient() {
-	conn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8080", nil)
+	conn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8080/socket", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
