@@ -1,8 +1,8 @@
 package main
 
 import (
-	"blackboxv3/client"
-	"blackboxv3/server"
+	"blackboxv3/ws"
+	"blackboxv3/wsclient"
 	"log"
 	"net/http"
 	"os"
@@ -35,7 +35,7 @@ func main() {
 		qrCode := getQRCode(hostname)
 		w.Write(qrCode)
 	})
-	http.HandleFunc("/socket", server.ServeWS)
+	http.HandleFunc("/socket", ws.ServeWS)
 	log.Println("Server started on " + hostname + ":8080")
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -51,7 +51,7 @@ func testClient() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	c := client.NewClient(conn)
+	c := wsclient.NewClient(conn)
 	c.WriteMessage(websocket.TextMessage, []byte("Hello World"))
 	c.WriteMessage(websocket.TextMessage, []byte("Duniya Khatam Ho Jayegi"))
 }

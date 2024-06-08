@@ -1,0 +1,26 @@
+syntax = "proto3";
+option go_package = "github.com/samar2170/blackboxv3";
+
+message CreateChannelRequest {
+    string token = 1;
+    string name = 2;
+}
+
+message CreateChannelResponse {
+    bool success = 1;
+    string msg = 2;
+}
+
+message GetChannelsRequest {
+    string token = 1;
+}
+
+message GetChannelsResponse {
+    repeated Channel channels = 1;
+
+    message Channel {
+        string id = 1;
+        string name = 2;
+    }
+}
+

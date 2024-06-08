@@ -30,6 +30,13 @@ start-server:
 	@echo "Starting server..."
 	@go run .
 
+proto-gen: 
+	@echo "Going to api directory... $(BASEDIR)/api"
+	@cd $(BASEDIR)/api
+	@echo "in directory $(shell pwd)"
+	@echo "Generating proto files..."
+	@protoc --go_out=./apigen --go_opt=paths=source_relative  --go-grpc_out=./apigen --go-grpc_opt=paths=source_relative *.proto
+
 .PHONY:
 run:
 	@make clear-existing-hostname
@@ -39,3 +46,6 @@ run:
 	@make make-uploads-dir
 	@make start-server
 	
+.PHONY:
+proto:
+	@make proto-gen
