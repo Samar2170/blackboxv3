@@ -17,10 +17,15 @@ func init() {
 
 type User struct {
 	*gorm.Model
-	ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Username string    `json:"username"`
-	PIN      string    `json:"pin"`
-	Email    string    `json:"email"`
+	ID       string `json:"id" gorm:"primaryKey;uniqueIndex"`
+	Username string `json:"username" gorm:"uniqueIndex"`
+	PIN      string `json:"pin"`
+	Email    string `json:"email" gorm:"uniqueIndex"`
+}
+
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	u.ID = uuid.New().String()
+	return
 }
 
 type Channel struct {

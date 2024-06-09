@@ -5,6 +5,8 @@ import (
 	"blackboxv3/pkg/db"
 	"blackboxv3/pkg/utils"
 	"os"
+
+	"log"
 )
 
 func Signup(username, pin, email string) error {
@@ -22,14 +24,16 @@ func Login(username, pin string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	token, err := utils.CreateToken(username, user.ID.String())
+	token, err := utils.CreateToken(username, user.ID)
 	return token, err
 }
 
 func CreateChannel(name string) error {
 	var err error
 	uploadsDir := os.Getenv("UPLOADSDIR")
-	err = os.MkdirAll(uploadsDir+"/"+name, 0755)
+	log.Println(uploadsDir)
+	log.Println(name)
+	err = os.MkdirAll(uploadsDir+"/"+name, 0777)
 	if err != nil {
 		return err
 	}

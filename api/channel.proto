@@ -16,11 +16,14 @@ message GetChannelsRequest {
 }
 
 message GetChannelsResponse {
-    repeated Channel channels = 1;
+    bool success = 1;
+    string msg = 2;
+    repeated Channel channels = 3;
 
     message Channel {
         string id = 1;
         string name = 2;
     }
+
 }
 
