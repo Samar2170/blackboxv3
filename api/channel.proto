@@ -24,6 +24,30 @@ message GetChannelsResponse {
         string id = 1;
         string name = 2;
     }
-
 }
 
+message GetChannelRequest {
+    string token = 1;
+    string id = 2;
+}
+
+message GetChannelResponse {
+    bool success = 1;
+    string msg = 2;
+    Channel channel = 3;
+
+    message Channel {
+        string id = 1;
+        string name = 2;
+    }
+}
+
+message DeleteChannelRequest {
+    string token = 1;
+    string id = 2;
+}
+
+message DeleteChannelResponse {
+    bool success = 1;
+    string msg = 2;
+}

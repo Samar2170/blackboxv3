@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "channel.proto";
+import "message.proto";
 
 option go_package = "github.com/samar2170/blackboxv3";
 
@@ -10,6 +11,11 @@ service BlackBoxService {
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse) {}
     rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse) {}
+    rpc GetChannel(GetChannelRequest) returns (GetChannelResponse) {}
+    rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {}
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+    rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {}
+    // rpc SendMediaMessage(SendMediaMessageRequest) returns (SendMediaMessageResponse) {}
 }
 
 message SignupRequest {

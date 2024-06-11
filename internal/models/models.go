@@ -54,7 +54,7 @@ type TextMessage struct {
 	Text      string  `json:"text"`
 }
 
-func (t *TextMessage) toJson() map[string]interface{} {
+func (t TextMessage) toJson() map[string]interface{} {
 	return map[string]interface{}{
 		"id":        t.ID,
 		"chat_id":   t.ChannelID,
@@ -64,7 +64,7 @@ func (t *TextMessage) toJson() map[string]interface{} {
 	}
 }
 
-func (m *MediaMessage) toJson() map[string]interface{} {
+func (m MediaMessage) toJson() map[string]interface{} {
 	return map[string]interface{}{
 		"id":         m.ID,
 		"chat_id":    m.ChannelID,

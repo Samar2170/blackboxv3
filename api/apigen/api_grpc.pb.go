@@ -23,6 +23,10 @@ const (
 	BlackBoxService_Login_FullMethodName         = "/blackboxv3.BlackBoxService/Login"
 	BlackBoxService_CreateChannel_FullMethodName = "/blackboxv3.BlackBoxService/CreateChannel"
 	BlackBoxService_GetChannels_FullMethodName   = "/blackboxv3.BlackBoxService/GetChannels"
+	BlackBoxService_GetChannel_FullMethodName    = "/blackboxv3.BlackBoxService/GetChannel"
+	BlackBoxService_DeleteChannel_FullMethodName = "/blackboxv3.BlackBoxService/DeleteChannel"
+	BlackBoxService_SendMessage_FullMethodName   = "/blackboxv3.BlackBoxService/SendMessage"
+	BlackBoxService_GetMessages_FullMethodName   = "/blackboxv3.BlackBoxService/GetMessages"
 )
 
 // BlackBoxServiceClient is the client API for BlackBoxService service.
@@ -33,6 +37,10 @@ type BlackBoxServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	CreateChannel(ctx context.Context, in *CreateChannelRequest, opts ...grpc.CallOption) (*CreateChannelResponse, error)
 	GetChannels(ctx context.Context, in *GetChannelsRequest, opts ...grpc.CallOption) (*GetChannelsResponse, error)
+	GetChannel(ctx context.Context, in *GetChannelRequest, opts ...grpc.CallOption) (*GetChannelResponse, error)
+	DeleteChannel(ctx context.Context, in *DeleteChannelRequest, opts ...grpc.CallOption) (*DeleteChannelResponse, error)
+	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
+	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesResponse, error)
 }
 
 type blackBoxServiceClient struct {
@@ -83,6 +91,46 @@ func (c *blackBoxServiceClient) GetChannels(ctx context.Context, in *GetChannels
 	return out, nil
 }
 
+func (c *blackBoxServiceClient) GetChannel(ctx context.Context, in *GetChannelRequest, opts ...grpc.CallOption) (*GetChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetChannelResponse)
+	err := c.cc.Invoke(ctx, BlackBoxService_GetChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blackBoxServiceClient) DeleteChannel(ctx context.Context, in *DeleteChannelRequest, opts ...grpc.CallOption) (*DeleteChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteChannelResponse)
+	err := c.cc.Invoke(ctx, BlackBoxService_DeleteChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blackBoxServiceClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendMessageResponse)
+	err := c.cc.Invoke(ctx, BlackBoxService_SendMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blackBoxServiceClient) GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMessagesResponse)
+	err := c.cc.Invoke(ctx, BlackBoxService_GetMessages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlackBoxServiceServer is the server API for BlackBoxService service.
 // All implementations must embed UnimplementedBlackBoxServiceServer
 // for forward compatibility
@@ -91,6 +139,10 @@ type BlackBoxServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	CreateChannel(context.Context, *CreateChannelRequest) (*CreateChannelResponse, error)
 	GetChannels(context.Context, *GetChannelsRequest) (*GetChannelsResponse, error)
+	GetChannel(context.Context, *GetChannelRequest) (*GetChannelResponse, error)
+	DeleteChannel(context.Context, *DeleteChannelRequest) (*DeleteChannelResponse, error)
+	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
+	GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesResponse, error)
 	mustEmbedUnimplementedBlackBoxServiceServer()
 }
 
@@ -109,6 +161,18 @@ func (UnimplementedBlackBoxServiceServer) CreateChannel(context.Context, *Create
 }
 func (UnimplementedBlackBoxServiceServer) GetChannels(context.Context, *GetChannelsRequest) (*GetChannelsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChannels not implemented")
+}
+func (UnimplementedBlackBoxServiceServer) GetChannel(context.Context, *GetChannelRequest) (*GetChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChannel not implemented")
+}
+func (UnimplementedBlackBoxServiceServer) DeleteChannel(context.Context, *DeleteChannelRequest) (*DeleteChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteChannel not implemented")
+}
+func (UnimplementedBlackBoxServiceServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+}
+func (UnimplementedBlackBoxServiceServer) GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
 }
 func (UnimplementedBlackBoxServiceServer) mustEmbedUnimplementedBlackBoxServiceServer() {}
 
@@ -195,6 +259,78 @@ func _BlackBoxService_GetChannels_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlackBoxService_GetChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlackBoxServiceServer).GetChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlackBoxService_GetChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlackBoxServiceServer).GetChannel(ctx, req.(*GetChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlackBoxService_DeleteChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlackBoxServiceServer).DeleteChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlackBoxService_DeleteChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlackBoxServiceServer).DeleteChannel(ctx, req.(*DeleteChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlackBoxService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlackBoxServiceServer).SendMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlackBoxService_SendMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlackBoxServiceServer).SendMessage(ctx, req.(*SendMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlackBoxService_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlackBoxServiceServer).GetMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlackBoxService_GetMessages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlackBoxServiceServer).GetMessages(ctx, req.(*GetMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BlackBoxService_ServiceDesc is the grpc.ServiceDesc for BlackBoxService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -217,6 +353,22 @@ var BlackBoxService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetChannels",
 			Handler:    _BlackBoxService_GetChannels_Handler,
+		},
+		{
+			MethodName: "GetChannel",
+			Handler:    _BlackBoxService_GetChannel_Handler,
+		},
+		{
+			MethodName: "DeleteChannel",
+			Handler:    _BlackBoxService_DeleteChannel_Handler,
+		},
+		{
+			MethodName: "SendMessage",
+			Handler:    _BlackBoxService_SendMessage_Handler,
+		},
+		{
+			MethodName: "GetMessages",
+			Handler:    _BlackBoxService_GetMessages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -53,9 +53,25 @@ func GetChannels() ([]models.Channel, error) {
 }
 
 func GetChannelMessages(channelID uint) ([]models.Message, error) {
+	var textMsgs []models.TextMessage
+	var mediaMsgs []models.MediaMessage
+	var err error
+	err = db.DB.Where("channel_id = ?", channelID).Find(&textMsgs).Error
+	if err != nil {
+		return nil, err
+	}
+	err = db.DB.Where("channel_id = ?", channelID).Find(&mediaMsgs).Error
+	if err != nil {
+		return nil, err
+	}
 	var messages []models.Message
-	err := db.DB.Where("channel_id = ?", channelID).Find(&messages).Error
-	return messages, err
+	for _, msg := range textMsgs {
+		messages = append(messages, models.Message(msg))
+	}
+	for _, msg := range mediaMsgs {
+		messages = append(messages, models.Message(msg))
+	}
+	return messages, nil
 }
 
 func SendMessage(channelID uint, text string) error {

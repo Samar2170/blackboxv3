@@ -1,0 +1,63 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/samar2170/blackboxv3";
+
+
+message SendMessageRequest {
+    string token = 1;
+    int32 channelId = 2;
+    string msg = 3;
+}
+
+message SendMessageResponse {
+    bool success = 1;
+    string msg = 2;
+}
+
+message GetMessagesRequest {
+    string token = 1;
+    int32 channelId = 2;
+}
+
+message TextMessage {
+    int32 id = 1;
+    string msg = 2;
+    google.protobuf.Timestamp sentAt = 3;
+}
+
+message GetMessagesResponse {
+    bool success = 1;
+    string msg = 2;
+    repeated TextMessage messages = 3;
+}
+
+message FileMetaData {
+    string name = 1;
+    string size = 2;
+    string type = 3;
+}
+
+message File {
+    bytes content = 1;
+}
+
+enum Status {
+    PENDING = 0;
+    INPROGRESS = 1;
+    SUCCESS = 2;
+    FAILED = 3;
+}
+
+message SendMediaMessageRequest {
+    string token = 1;
+    int32 channelId = 2;
+    FileMetaData metadata = 3;
+    File file = 4;
+}
+
+message SendMediaMessageResponse {
+    bool success = 1;
+    string msg = 2;
+    Status status = 3;
+}
