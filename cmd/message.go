@@ -6,6 +6,7 @@ import (
 	"blackboxv3/internal/services"
 	"blackboxv3/pkg/utils"
 	"context"
+	"io"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -63,24 +64,19 @@ func (s *GrpcServer) GetMessages(ctx context.Context, in *blackboxv3.GetMessages
 	return resp, nil
 }
 
-// func (s *GrpcServer) SendMediaMessage(ctx context.Context, in *blackboxv3.SendMediaMessageRequest) (*blackboxv3.SendMediaMessageResponse, error) {
-// 	var err error
-// 	_, err = utils.ValidateToken(in.GetToken())
-// 	if err != nil {
-// 		return &blackboxv3.SendMediaMessageResponse{
-// 			Success: false,
-// 			Msg:     err.Error(),
-// 		}, nil
-// 	}
-// err = services.SendMediaMessage(uint(in.ChannelId), in.GetFile())
-// if err != nil {
-// 	return &blackboxv3.SendMediaMessageResponse{
-// 		Success: false,
-// 		Msg:     err.Error(),
-// 	}, nil
-// }
-// 	return &blackboxv3.SendMediaMessageResponse{
-// 		Success: true,
-// 		Msg:     "Message sent successfully",
-// 	}, nil
-// }
+func (s *GrpcServer) SendMediaMessage(stream blackboxv3.BlackBoxService_SendMediaMessageServer) error {
+	var combined []byte
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&blackboxv3.SendMediaMessageResponse{
+				Success: true,
+				Msg:     "Media message sent successfully",
+			})
+		}
+		if err != nil {
+			return err
+		}
+		combined = append(combined, req.GetChunk()...)
+	}
+}

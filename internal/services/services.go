@@ -5,6 +5,7 @@ import (
 	"blackboxv3/pkg/db"
 	"blackboxv3/pkg/utils"
 	"os"
+	"strings"
 
 	"log"
 )
@@ -78,6 +79,34 @@ func SendMessage(channelID uint, text string) error {
 	err := db.DB.Create(&models.TextMessage{
 		ChannelID: channelID,
 		Text:      text,
+	}).Error
+	return err
+}
+
+func SaveMediaMessage(channelID uint, fileName string, file []byte) error {
+	fileStringSplit := strings.Split(fileName, ".")
+	fileType := fileStringSplit[len(fileStringSplit)-1]
+
+	uploadsDir := os.Getenv("UPLOADSDIR")
+	var channel models.Channel
+	err := db.DB.First(&channel, channelID).Error
+	if err != nil {
+		return err
+	}
+	newFilePath := uploadsDir + "/" + channel.Name + "/" + fileName
+	newFile, err := os.Create(newFilePath)
+	if err != nil {
+		return err
+	}
+	_, err = newFile.Write(file)
+	if err != nil {
+		return err
+	}
+	err = db.DB.Create(&models.MediaMessage{
+		ChannelID: channelID,
+		MediaName: fileName,
+		MediaType: fileType,
+		MediaSize: int64(len(file)),
 	}).Error
 	return err
 }

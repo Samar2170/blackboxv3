@@ -38,9 +38,6 @@ message FileMetaData {
     string type = 3;
 }
 
-message File {
-    bytes content = 1;
-}
 
 enum Status {
     PENDING = 0;
@@ -50,10 +47,12 @@ enum Status {
 }
 
 message SendMediaMessageRequest {
-    string token = 1;
-    int32 channelId = 2;
-    FileMetaData metadata = 3;
-    File file = 4;
+    oneof media {
+        FileMetaData fileMetaData = 1;
+        string token = 2;
+        int32 channelId = 3;
+        bytes chunk = 4;
+    }
 }
 
 message SendMediaMessageResponse {

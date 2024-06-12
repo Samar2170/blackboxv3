@@ -11,7 +11,7 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	go.mongodb.org/mongo-driver v1.15.0
 	google.golang.org/grpc v1.64.0
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.10

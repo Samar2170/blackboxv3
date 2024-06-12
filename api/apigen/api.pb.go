@@ -280,7 +280,7 @@ var file_api_proto_rawDesc = []byte{
 	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
 	0x73, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x32, 0x85, 0x04, 0x0a, 0x0f, 0x42, 0x6c,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x32, 0xd2, 0x04, 0x0a, 0x0f, 0x42, 0x6c,
 	0x61, 0x63, 0x6b, 0x42, 0x6f, 0x78, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x41, 0x0a,
 	0x06, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x12, 0x19, 0x2e, 0x62, 0x6c, 0x61, 0x63, 0x6b, 0x62,
 	0x6f, 0x78, 0x76, 0x33, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65,
@@ -313,9 +313,14 @@ var file_api_proto_rawDesc = []byte{
 	0x61, 0x67, 0x65, 0x73, 0x12, 0x13, 0x2e, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
 	0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x47, 0x65, 0x74, 0x4d,
 	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x42, 0x21, 0x5a, 0x1f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
-	0x73, 0x61, 0x6d, 0x61, 0x72, 0x32, 0x31, 0x37, 0x30, 0x2f, 0x62, 0x6c, 0x61, 0x63, 0x6b, 0x62,
-	0x6f, 0x78, 0x76, 0x33, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x00, 0x12, 0x4b, 0x0a, 0x10, 0x53, 0x65, 0x6e, 0x64, 0x4d, 0x65, 0x64, 0x69, 0x61, 0x4d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x18, 0x2e, 0x53, 0x65, 0x6e, 0x64, 0x4d, 0x65, 0x64, 0x69,
+	0x61, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x19, 0x2e, 0x53, 0x65, 0x6e, 0x64, 0x4d, 0x65, 0x64, 0x69, 0x61, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x42, 0x21,
+	0x5a, 0x1f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x61, 0x6d,
+	0x61, 0x72, 0x32, 0x31, 0x37, 0x30, 0x2f, 0x62, 0x6c, 0x61, 0x63, 0x6b, 0x62, 0x6f, 0x78, 0x76,
+	0x33, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -332,22 +337,24 @@ func file_api_proto_rawDescGZIP() []byte {
 
 var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_api_proto_goTypes = []any{
-	(*SignupRequest)(nil),         // 0: blackboxv3.SignupRequest
-	(*SignupResponse)(nil),        // 1: blackboxv3.SignupResponse
-	(*LoginRequest)(nil),          // 2: blackboxv3.LoginRequest
-	(*LoginResponse)(nil),         // 3: blackboxv3.LoginResponse
-	(*CreateChannelRequest)(nil),  // 4: CreateChannelRequest
-	(*GetChannelsRequest)(nil),    // 5: GetChannelsRequest
-	(*GetChannelRequest)(nil),     // 6: GetChannelRequest
-	(*DeleteChannelRequest)(nil),  // 7: DeleteChannelRequest
-	(*SendMessageRequest)(nil),    // 8: SendMessageRequest
-	(*GetMessagesRequest)(nil),    // 9: GetMessagesRequest
-	(*CreateChannelResponse)(nil), // 10: CreateChannelResponse
-	(*GetChannelsResponse)(nil),   // 11: GetChannelsResponse
-	(*GetChannelResponse)(nil),    // 12: GetChannelResponse
-	(*DeleteChannelResponse)(nil), // 13: DeleteChannelResponse
-	(*SendMessageResponse)(nil),   // 14: SendMessageResponse
-	(*GetMessagesResponse)(nil),   // 15: GetMessagesResponse
+	(*SignupRequest)(nil),            // 0: blackboxv3.SignupRequest
+	(*SignupResponse)(nil),           // 1: blackboxv3.SignupResponse
+	(*LoginRequest)(nil),             // 2: blackboxv3.LoginRequest
+	(*LoginResponse)(nil),            // 3: blackboxv3.LoginResponse
+	(*CreateChannelRequest)(nil),     // 4: CreateChannelRequest
+	(*GetChannelsRequest)(nil),       // 5: GetChannelsRequest
+	(*GetChannelRequest)(nil),        // 6: GetChannelRequest
+	(*DeleteChannelRequest)(nil),     // 7: DeleteChannelRequest
+	(*SendMessageRequest)(nil),       // 8: SendMessageRequest
+	(*GetMessagesRequest)(nil),       // 9: GetMessagesRequest
+	(*SendMediaMessageRequest)(nil),  // 10: SendMediaMessageRequest
+	(*CreateChannelResponse)(nil),    // 11: CreateChannelResponse
+	(*GetChannelsResponse)(nil),      // 12: GetChannelsResponse
+	(*GetChannelResponse)(nil),       // 13: GetChannelResponse
+	(*DeleteChannelResponse)(nil),    // 14: DeleteChannelResponse
+	(*SendMessageResponse)(nil),      // 15: SendMessageResponse
+	(*GetMessagesResponse)(nil),      // 16: GetMessagesResponse
+	(*SendMediaMessageResponse)(nil), // 17: SendMediaMessageResponse
 }
 var file_api_proto_depIdxs = []int32{
 	0,  // 0: blackboxv3.BlackBoxService.Signup:input_type -> blackboxv3.SignupRequest
@@ -358,16 +365,18 @@ var file_api_proto_depIdxs = []int32{
 	7,  // 5: blackboxv3.BlackBoxService.DeleteChannel:input_type -> DeleteChannelRequest
 	8,  // 6: blackboxv3.BlackBoxService.SendMessage:input_type -> SendMessageRequest
 	9,  // 7: blackboxv3.BlackBoxService.GetMessages:input_type -> GetMessagesRequest
-	1,  // 8: blackboxv3.BlackBoxService.Signup:output_type -> blackboxv3.SignupResponse
-	3,  // 9: blackboxv3.BlackBoxService.Login:output_type -> blackboxv3.LoginResponse
-	10, // 10: blackboxv3.BlackBoxService.CreateChannel:output_type -> CreateChannelResponse
-	11, // 11: blackboxv3.BlackBoxService.GetChannels:output_type -> GetChannelsResponse
-	12, // 12: blackboxv3.BlackBoxService.GetChannel:output_type -> GetChannelResponse
-	13, // 13: blackboxv3.BlackBoxService.DeleteChannel:output_type -> DeleteChannelResponse
-	14, // 14: blackboxv3.BlackBoxService.SendMessage:output_type -> SendMessageResponse
-	15, // 15: blackboxv3.BlackBoxService.GetMessages:output_type -> GetMessagesResponse
-	8,  // [8:16] is the sub-list for method output_type
-	0,  // [0:8] is the sub-list for method input_type
+	10, // 8: blackboxv3.BlackBoxService.SendMediaMessage:input_type -> SendMediaMessageRequest
+	1,  // 9: blackboxv3.BlackBoxService.Signup:output_type -> blackboxv3.SignupResponse
+	3,  // 10: blackboxv3.BlackBoxService.Login:output_type -> blackboxv3.LoginResponse
+	11, // 11: blackboxv3.BlackBoxService.CreateChannel:output_type -> CreateChannelResponse
+	12, // 12: blackboxv3.BlackBoxService.GetChannels:output_type -> GetChannelsResponse
+	13, // 13: blackboxv3.BlackBoxService.GetChannel:output_type -> GetChannelResponse
+	14, // 14: blackboxv3.BlackBoxService.DeleteChannel:output_type -> DeleteChannelResponse
+	15, // 15: blackboxv3.BlackBoxService.SendMessage:output_type -> SendMessageResponse
+	16, // 16: blackboxv3.BlackBoxService.GetMessages:output_type -> GetMessagesResponse
+	17, // 17: blackboxv3.BlackBoxService.SendMediaMessage:output_type -> SendMediaMessageResponse
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

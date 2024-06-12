@@ -15,7 +15,7 @@ service BlackBoxService {
     rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {}
     rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
     rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {}
-    // rpc SendMediaMessage(SendMediaMessageRequest) returns (SendMediaMessageResponse) {}
+    rpc SendMediaMessage(stream SendMediaMessageRequest) returns (SendMediaMessageResponse) {}
 }
 
 message SignupRequest {

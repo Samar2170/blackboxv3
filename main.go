@@ -1,13 +1,13 @@
 package main
 
 import (
-	blackboxv3 "blackboxv3/api/apigen"
 	"blackboxv3/cmd"
 	"log"
 	"net"
 
 	"github.com/joho/godotenv"
 	"github.com/skip2/go-qrcode"
+	"google.golang.org/grpc"
 )
 
 func getQRCode(ipAddr string) []byte {
@@ -28,12 +28,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	blackboxv3.RegisterBlackBoxServiceServer(cmd.Server, &cmd.GrpcServer{})
-	if err := cmd.Server.Serve(lis); err != nil {
+	grpcServer := grpc.NewServer()
+	s := cmd.NewBlackboxServer(log.Default())
+	cmd.RegisterBlackBoxServer(grpcServer, s)
+
+	defer grpcServer.GracefulStop()
+
+	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
-	} else {
-		log.Println("Server started")
 	}
+
 }
 
 // func main() {

@@ -19,14 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	BlackBoxService_Signup_FullMethodName        = "/blackboxv3.BlackBoxService/Signup"
-	BlackBoxService_Login_FullMethodName         = "/blackboxv3.BlackBoxService/Login"
-	BlackBoxService_CreateChannel_FullMethodName = "/blackboxv3.BlackBoxService/CreateChannel"
-	BlackBoxService_GetChannels_FullMethodName   = "/blackboxv3.BlackBoxService/GetChannels"
-	BlackBoxService_GetChannel_FullMethodName    = "/blackboxv3.BlackBoxService/GetChannel"
-	BlackBoxService_DeleteChannel_FullMethodName = "/blackboxv3.BlackBoxService/DeleteChannel"
-	BlackBoxService_SendMessage_FullMethodName   = "/blackboxv3.BlackBoxService/SendMessage"
-	BlackBoxService_GetMessages_FullMethodName   = "/blackboxv3.BlackBoxService/GetMessages"
+	BlackBoxService_Signup_FullMethodName           = "/blackboxv3.BlackBoxService/Signup"
+	BlackBoxService_Login_FullMethodName            = "/blackboxv3.BlackBoxService/Login"
+	BlackBoxService_CreateChannel_FullMethodName    = "/blackboxv3.BlackBoxService/CreateChannel"
+	BlackBoxService_GetChannels_FullMethodName      = "/blackboxv3.BlackBoxService/GetChannels"
+	BlackBoxService_GetChannel_FullMethodName       = "/blackboxv3.BlackBoxService/GetChannel"
+	BlackBoxService_DeleteChannel_FullMethodName    = "/blackboxv3.BlackBoxService/DeleteChannel"
+	BlackBoxService_SendMessage_FullMethodName      = "/blackboxv3.BlackBoxService/SendMessage"
+	BlackBoxService_GetMessages_FullMethodName      = "/blackboxv3.BlackBoxService/GetMessages"
+	BlackBoxService_SendMediaMessage_FullMethodName = "/blackboxv3.BlackBoxService/SendMediaMessage"
 )
 
 // BlackBoxServiceClient is the client API for BlackBoxService service.
@@ -41,6 +42,7 @@ type BlackBoxServiceClient interface {
 	DeleteChannel(ctx context.Context, in *DeleteChannelRequest, opts ...grpc.CallOption) (*DeleteChannelResponse, error)
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesResponse, error)
+	SendMediaMessage(ctx context.Context, opts ...grpc.CallOption) (BlackBoxService_SendMediaMessageClient, error)
 }
 
 type blackBoxServiceClient struct {
@@ -131,6 +133,41 @@ func (c *blackBoxServiceClient) GetMessages(ctx context.Context, in *GetMessages
 	return out, nil
 }
 
+func (c *blackBoxServiceClient) SendMediaMessage(ctx context.Context, opts ...grpc.CallOption) (BlackBoxService_SendMediaMessageClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &BlackBoxService_ServiceDesc.Streams[0], BlackBoxService_SendMediaMessage_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &blackBoxServiceSendMediaMessageClient{ClientStream: stream}
+	return x, nil
+}
+
+type BlackBoxService_SendMediaMessageClient interface {
+	Send(*SendMediaMessageRequest) error
+	CloseAndRecv() (*SendMediaMessageResponse, error)
+	grpc.ClientStream
+}
+
+type blackBoxServiceSendMediaMessageClient struct {
+	grpc.ClientStream
+}
+
+func (x *blackBoxServiceSendMediaMessageClient) Send(m *SendMediaMessageRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *blackBoxServiceSendMediaMessageClient) CloseAndRecv() (*SendMediaMessageResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(SendMediaMessageResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // BlackBoxServiceServer is the server API for BlackBoxService service.
 // All implementations must embed UnimplementedBlackBoxServiceServer
 // for forward compatibility
@@ -143,6 +180,7 @@ type BlackBoxServiceServer interface {
 	DeleteChannel(context.Context, *DeleteChannelRequest) (*DeleteChannelResponse, error)
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesResponse, error)
+	SendMediaMessage(BlackBoxService_SendMediaMessageServer) error
 	mustEmbedUnimplementedBlackBoxServiceServer()
 }
 
@@ -173,6 +211,9 @@ func (UnimplementedBlackBoxServiceServer) SendMessage(context.Context, *SendMess
 }
 func (UnimplementedBlackBoxServiceServer) GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
+}
+func (UnimplementedBlackBoxServiceServer) SendMediaMessage(BlackBoxService_SendMediaMessageServer) error {
+	return status.Errorf(codes.Unimplemented, "method SendMediaMessage not implemented")
 }
 func (UnimplementedBlackBoxServiceServer) mustEmbedUnimplementedBlackBoxServiceServer() {}
 
@@ -331,6 +372,32 @@ func _BlackBoxService_GetMessages_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlackBoxService_SendMediaMessage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(BlackBoxServiceServer).SendMediaMessage(&blackBoxServiceSendMediaMessageServer{ServerStream: stream})
+}
+
+type BlackBoxService_SendMediaMessageServer interface {
+	SendAndClose(*SendMediaMessageResponse) error
+	Recv() (*SendMediaMessageRequest, error)
+	grpc.ServerStream
+}
+
+type blackBoxServiceSendMediaMessageServer struct {
+	grpc.ServerStream
+}
+
+func (x *blackBoxServiceSendMediaMessageServer) SendAndClose(m *SendMediaMessageResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *blackBoxServiceSendMediaMessageServer) Recv() (*SendMediaMessageRequest, error) {
+	m := new(SendMediaMessageRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // BlackBoxService_ServiceDesc is the grpc.ServiceDesc for BlackBoxService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -371,6 +438,12 @@ var BlackBoxService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BlackBoxService_GetMessages_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SendMediaMessage",
+			Handler:       _BlackBoxService_SendMediaMessage_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "api.proto",
 }
