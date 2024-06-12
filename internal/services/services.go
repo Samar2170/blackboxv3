@@ -83,30 +83,21 @@ func SendMessage(channelID uint, text string) error {
 	return err
 }
 
-func SaveMediaMessage(channelID uint, fileName string, file []byte) error {
+func SaveMediaMessageMetadata(channelID uint, fileName string) error {
+	var err error
 	fileStringSplit := strings.Split(fileName, ".")
 	fileType := fileStringSplit[len(fileStringSplit)-1]
 
-	uploadsDir := os.Getenv("UPLOADSDIR")
-	var channel models.Channel
-	err := db.DB.First(&channel, channelID).Error
-	if err != nil {
-		return err
-	}
-	newFilePath := uploadsDir + "/" + channel.Name + "/" + fileName
-	newFile, err := os.Create(newFilePath)
-	if err != nil {
-		return err
-	}
-	_, err = newFile.Write(file)
-	if err != nil {
-		return err
-	}
 	err = db.DB.Create(&models.MediaMessage{
 		ChannelID: channelID,
 		MediaName: fileName,
 		MediaType: fileType,
-		MediaSize: int64(len(file)),
 	}).Error
 	return err
+}
+
+func GetChannelByParam(param, value string) (models.Channel, error) {
+	var channel models.Channel
+	err := db.DB.Where(param+" = ?", value).First(&channel).Error
+	return channel, err
 }

@@ -7,6 +7,8 @@ import (
 	"blackboxv3/pkg/utils"
 	"context"
 	"io"
+	"os"
+	"strconv"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -65,7 +67,10 @@ func (s *GrpcServer) GetMessages(ctx context.Context, in *blackboxv3.GetMessages
 }
 
 func (s *GrpcServer) SendMediaMessage(stream blackboxv3.BlackBoxService_SendMediaMessageServer) error {
-	var combined []byte
+	var newFile *os.File
+	defer newFile.Close()
+	var filesize uint32
+
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
@@ -77,6 +82,40 @@ func (s *GrpcServer) SendMediaMessage(stream blackboxv3.BlackBoxService_SendMedi
 		if err != nil {
 			return err
 		}
-		combined = append(combined, req.GetChunk()...)
+		if req.GetFileMetaData() != nil {
+			err = services.SaveMediaMessageMetadata(uint(req.GetChannelId()), req.GetFileMetaData().GetName())
+			if err != nil {
+				return err
+			}
+		}
+		uploadsDir := os.Getenv("UPLOADSDIR")
+		channel, err := services.GetChannelByParam("id", strconv.Itoa(int(req.GetChannelId())))
+		if err != nil {
+			return err
+		}
+		newFilePath := uploadsDir + "/" + channel.Name + "/" + req.GetFileMetaData().GetName()
+		newFile, err = os.Create(newFilePath)
+		if err != nil {
+			return err
+		}
+		chunk := req.GetChunk()
+		filesize += uint32(len(chunk))
+		if _, err := newFile.Write(chunk); err != nil {
+			return err
+		}
 	}
 }
+
+// func SaveFile(file []byte, fileName, channelName string) error {
+// 	uploadsDir := os.Getenv("UPLOADSDIR")
+// 	newFilePath := uploadsDir + "/" + channelName + "/" + fileName
+// 	newFile, err := os.Create(newFilePath)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	_, err = newFile.Write(file)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
