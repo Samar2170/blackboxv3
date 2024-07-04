@@ -34,7 +34,7 @@ message GetMessagesResponse {
 
 message FileMetaData {
     string name = 1;
-    string size = 2;
+    int32 size = 2;
     string type = 3;
 }
 
@@ -47,12 +47,10 @@ enum Status {
 }
 
 message SendMediaMessageRequest {
-    oneof media {
         FileMetaData fileMetaData = 1;
         string token = 2;
         int32 channelId = 3;
         bytes chunk = 4;
-    }
 }
 
 message SendMediaMessageResponse {

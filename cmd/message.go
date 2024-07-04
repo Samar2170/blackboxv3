@@ -70,7 +70,6 @@ func (s *GrpcServer) SendMediaMessage(stream blackboxv3.BlackBoxService_SendMedi
 	var newFile *os.File
 	defer newFile.Close()
 	var filesize uint32
-
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {

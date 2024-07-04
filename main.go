@@ -2,8 +2,10 @@ package main
 
 import (
 	"blackboxv3/cmd"
+	"blackboxv3/grpcclient"
 	"log"
 	"net"
+	"sync"
 
 	"github.com/joho/godotenv"
 	"github.com/skip2/go-qrcode"
@@ -34,10 +36,29 @@ func main() {
 
 	defer grpcServer.GracefulStop()
 
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		if err := grpcServer.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+		wg.Done()
+	}()
 
+	wg.Add(1)
+	go func() {
+		testMediaMessage()
+		wg.Done()
+	}()
+
+	wg.Wait()
+}
+
+func testMediaMessage() {
+	err := grpcclient.SendMediaMessageTest()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // func main() {
